@@ -1,0 +1,42 @@
+# --- IDE & Editors ---
+# VS Code
+.vscode/
+*.code-workspace
+
+# Visual Studio
+.vs/
+out/
+*.user
+*.userosscache
+*.sln.doccache
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# CLion / JetBrains
+.idea/
+cmake-build-*/
+
+# --- C++ / Build Tools ---
+# Build directories (стандартные папки для сборки)
+build/
+_build/
+x64/
+x86/
+
+# vcpkg
+vcpkg_installed/
+vcpkg-configuration.json.user
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+
+# --- System / OS ---
+.DS_Store
+Thumbs.db
