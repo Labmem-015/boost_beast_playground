@@ -1,0 +1,58 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 31
+  },
+  "configurePresets": [
+    {
+      "hidden": true,
+      "name": "default",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "installDir": "${sourceDir}/install/${presetName}",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "warnings": {
+        "dev": true
+      },
+      "cacheVariables": {
+        "CMAKE_CXX_SCAN_FOR_MODULES": false,
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+        "CMAKE_VERBOSE_MAKEFILE": false,
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      }
+    },
+    {
+      "name": "debug",
+      "displayName": "Debug",
+      "inherits": "default",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "debug",
+      "displayName": "Debug",
+      "configurePreset": "debug"
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "debug",
+      "steps": [
+        {
+          "name": "debug",
+          "type": "configure"
+        },
+        {
+          "name": "debug",
+          "type": "build"
+        }
+      ]
+    }
+  ]
+}
