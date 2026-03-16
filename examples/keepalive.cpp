@@ -1,11 +1,24 @@
-namespace asio = boost::asio;
-namespace beast = boost::beast;
+#include <client.hpp>
 
-using tcp_t = asio::ip::tcp;
-using tcp_stream_t = beast::tcp_stream;
+using namespace pg;
 
 int main(int argc, char* argv[]) {
-	asio::io_context ctx;
-	tcp_t::resolver(ctx).resolve("127.0.0.1", "80");
+	try {
+		auto ctx = std::make_shared<asio::io_context>();
+		Client client("127.0.0.1", "8000");
+		client.init(ctx);
+		request_t req;
+
+		req.method(http::verb::post);
+		req.target("/echo");
+		req.body() = "some info";
+
+		client.query(req);
+
+		ctx->run();
+	}
+	catch (const std::exception& e) {
+		std::cout << "Error: " << e.what() << std::endl;
+	}
 	return 0;
 }
