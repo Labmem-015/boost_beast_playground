@@ -37,33 +37,22 @@ def log_connection_info(request: Request):
 
     # Логирование заголовков
     logger.info(f"Заголовки запроса ({len(dict(request.headers))} шт.):")
-    _log_headers_safely(request.headers)
+    headers: Mapping[str, str] = request.headers
+    for key, value in headers.items():
+        max_length = 200
+        if len(value) > max_length:
+            display_value = value[:max_length] + "..."
+        else:
+            display_value = value
+
+        logger.info(f"  {key}: {display_value}")
     logger.info(f"{'─'*60}\n")
 
 
-def _log_headers_safely(headers: Mapping[str, str]):
-    """Безопасное логирование заголовков без конфиденциальных данных."""
-    sensitive_keys = {'authorization', 'cookie', 'set-cookie', 'x-api-key', 'proxy-authorization'}
-    for key, value in headers.items():
-        if key.lower() in sensitive_keys:
-            safe_key = "[REDACTED]"
-            safe_value = "***REDACTED***"
-        else:
-            safe_key = key
-            safe_value = value
-
-        max_length = 200
-        if len(safe_value) > max_length:
-            display_value = safe_value[:max_length] + "..."
-        else:
-            display_value = safe_value
-
-        logger.info(f"  {safe_key}: {display_value}")
-
-
 @app.get("/")
-async def root():
+async def root(request: Request):
     """Эндпоинт проверки доступности сервера."""
+    log_connection_info(request)
     return {"status": "ok", "message": "Сервер запущен успешно"}
 
 
@@ -118,17 +107,6 @@ async def echo_endpoint(request: Request):
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
-@app.get("/test")
-async def test_endpoint(request: Request):
-    """Демонстрационный эндпоинт GET-запроса."""
-    log_connection_info(request)
-    return {
-        "action": "получение",
-        "url": str(request.url),
-        "query_params": dict(request.query_params)
-    }
-
-
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000, timeout_keep_alive=5)

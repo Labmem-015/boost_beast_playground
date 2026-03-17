@@ -22,3 +22,15 @@ add_executable(keepalive
 )
 target_precompile_headers(keepalive REUSE_FROM client)
 target_link_libraries(keepalive PRIVATE client)
+
+add_executable(send_after_close
+	${PROJECT_SOURCE_DIR}/examples/send_after_close.cpp
+)
+target_precompile_headers(send_after_close REUSE_FROM client)
+target_link_libraries(send_after_close PRIVATE client)
+
+add_executable(system_errors
+	${PROJECT_SOURCE_DIR}/examples/system_errors.cpp
+)
+target_precompile_headers(system_errors REUSE_FROM client)
+target_link_libraries(system_errors PRIVATE Boost::asio)

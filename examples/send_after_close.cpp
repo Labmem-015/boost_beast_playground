@@ -7,13 +7,19 @@ int main(int argc, char* argv[]) {
 		auto ctx = std::make_shared<asio::io_context>();
 		Client client("127.0.0.1", "8000");
 		client.init(ctx);
-		request_t req;
+		client.connect();
 
+		request_t req;
 		req.method(http::verb::post);
 		req.target("/echo");
 		req.body() = "some info";
 
-		client.query_with_connecting(req);
+		client.query(req);
+		asio::steady_timer timer(*ctx);
+		timer.expires_after(6s);
+		timer.wait();
+		client.query(req);
+
 		ctx->run();
 		client.disconnect();
 	}
